@@ -21,10 +21,10 @@ class TransactionModel {
   /// get [TransactionModel] from map.
   factory TransactionModel.fromMap(Map<String, dynamic> map) {
     return TransactionModel(
-      transactionType: map['transactionType'] ?? '',
-      billingRefNo: map['billingRefNo'],
-      paymentAmount: map['paymentAmount'],
-      mobileNumberForEChargeSlip: map['mobileNumberForEChargeSlip'],
+      transactionType: map['TransactionType'] ?? '',
+      billingRefNo: map['BillingRefNo'],
+      paymentAmount: map['PaymentAmount'],
+      mobileNumberForEChargeSlip: map['MobileNumberForEChargeSlip'],
     );
   }
 
@@ -45,25 +45,6 @@ class TransactionModel {
   /// [mobileNumberForEChargeSlip] is the mobile number for eChargeSlip.
   final String? mobileNumberForEChargeSlip;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is TransactionModel &&
-        other.transactionType == transactionType &&
-        other.billingRefNo == billingRefNo &&
-        other.paymentAmount == paymentAmount &&
-        other.mobileNumberForEChargeSlip == mobileNumberForEChargeSlip;
-  }
-
-  @override
-  int get hashCode {
-    return transactionType.hashCode ^
-        billingRefNo.hashCode ^
-        paymentAmount.hashCode ^
-        mobileNumberForEChargeSlip.hashCode;
-  }
-
   /// copy and create new instance of [TransactionModel]
   TransactionModel copyWith({
     String? transactionType,
@@ -83,10 +64,10 @@ class TransactionModel {
   /// convert [TransactionModel] to map.
   Map<String, dynamic> toMap() {
     return {
-      'transactionType': transactionType,
-      'billingRefNo': billingRefNo,
-      'paymentAmount': paymentAmount,
-      'mobileNumberForEChargeSlip': mobileNumberForEChargeSlip,
+      'TransactionType': transactionType,
+      'BillingRefNo': billingRefNo,
+      'PaymentAmount': paymentAmount,
+      'MobileNumberForEChargeSlip': mobileNumberForEChargeSlip,
     };
   }
 
@@ -95,6 +76,25 @@ class TransactionModel {
 
   @override
   String toString() {
-    return '''TransactionModel(transactionType: $transactionType, billingRefNo: $billingRefNo, paymentAmount: $paymentAmount, mobileNumberForEChargeSlip: $mobileNumberForEChargeSlip)''';
+    return '''TransactionModel(TransactionType: $transactionType, BillingRefNo: $billingRefNo, PaymentAmount: $paymentAmount, MobileNumberForEChargeSlip: $mobileNumberForEChargeSlip)''';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TransactionModel &&
+        other.transactionType == transactionType &&
+        other.billingRefNo == billingRefNo &&
+        other.paymentAmount == paymentAmount &&
+        other.mobileNumberForEChargeSlip == mobileNumberForEChargeSlip;
+  }
+
+  @override
+  int get hashCode {
+    return transactionType.hashCode ^
+        billingRefNo.hashCode ^
+        paymentAmount.hashCode ^
+        mobileNumberForEChargeSlip.hashCode;
   }
 }

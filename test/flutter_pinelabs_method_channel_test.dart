@@ -1,16 +1,22 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_pinelabs/flutter_pinelabs_method_channel.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  MethodChannelFlutterPinelabs platform = MethodChannelFlutterPinelabs();
+  final MethodChannelFlutterPinelabs platform = MethodChannelFlutterPinelabs();
   const MethodChannel channel = MethodChannel('flutter_pinelabs');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
+      switch (methodCall.method) {
+        case 'getPlatformVersion':
+          return '42';
+        case 'doTransaction':
+          return {'message': 'pinelab working'}.toString();
+        default:
+      }
     });
   });
 
@@ -20,5 +26,15 @@ void main() {
 
   test('getPlatformVersion', () async {
     expect(await platform.getPlatformVersion(), '42');
+  });
+
+  test('sendRequest', () async {
+    final result = await platform.sendRequest(request: 'request');
+
+    channel.checkMockMethodCallHandler((MethodCall methodCall) {
+      expect(methodCall.method, 'doTransaction');
+      expect(methodCall.arguments, {'request': 'request'});
+    });
+    expect(result, {'message': 'pinelab working'}.toString());
   });
 }

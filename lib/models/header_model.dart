@@ -21,10 +21,10 @@ class HeaderModel {
   /// get [HeaderModel] from [map].
   factory HeaderModel.fromMap(Map<String, dynamic> map) {
     return HeaderModel(
-      applicationId: map['applicationId'] ?? '',
-      userId: map['userId'] ?? '',
-      methodId: map['methodId'] ?? '',
-      versionNo: map['versionNo'] ?? '',
+      applicationId: map['ApplicationId'] ?? '',
+      userId: map['UserId'] ?? '',
+      methodId: map['MethodId'] ?? '',
+      versionNo: map['VersionNo'] ?? '',
     );
   }
 
@@ -63,10 +63,10 @@ class HeaderModel {
   /// create [HeaderModel] to map.
   Map<String, dynamic> toMap() {
     return {
-      'applicationId': applicationId,
-      'userId': userId,
-      'methodId': methodId,
-      'versionNo': versionNo,
+      'ApplicationId': applicationId,
+      'UserId': userId,
+      'MethodId': methodId,
+      'VersionNo': versionNo,
     };
   }
 
@@ -75,7 +75,7 @@ class HeaderModel {
 
   @override
   String toString() {
-    return '''HeaderModel(applicationId: $applicationId, userId: $userId, methodId: $methodId, versionNo: $versionNo)''';
+    return '''HeaderModel(ApplicationId: $applicationId, UserId: $userId, MethodId: $methodId, VersionNo: $versionNo)''';
   }
 
   @override

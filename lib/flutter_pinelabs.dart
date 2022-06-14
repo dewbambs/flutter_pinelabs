@@ -1,5 +1,6 @@
 import 'package:flutter_pinelabs/flutter_pinelabs_platform_interface.dart';
 import 'package:flutter_pinelabs/models/header_model.dart';
+import 'package:flutter_pinelabs/models/response_model.dart';
 import 'package:flutter_pinelabs/models/transaction_model.dart';
 
 /// An implementation of Pinelabs Platform Interface that uses method channels.
@@ -76,13 +77,13 @@ class FlutterPinelabs {
   /// [billingRefNo] is the billing reference number.
   /// [paymentAmount] is the payment amount.
   /// [mobileNumberForEChargeSlip] is the mobile number for eChargeSlip.
-  Future<String?> doTransaction({
+  Future<ResponseModel?> doTransaction({
     required TransactionType transactionType,
     String? billingRefNo,
     int? paymentAmount,
     String? mobileNumberForEChargeSlip,
     HeaderModel? overrideHeader,
-  }) {
+  }) async {
     final detail = TransactionModel(
       transactionType: transactionType.code,
       billingRefNo: billingRefNo,
@@ -99,7 +100,9 @@ class FlutterPinelabs {
     final requestBody =
         {'Header': header.toJson(), 'Detail': detail.toJson()}.toString();
 
-    return FlutterPinelabsPlatform.instance.sendRequest(request: requestBody);
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
   }
 }
 

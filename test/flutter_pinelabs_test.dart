@@ -11,15 +11,8 @@ class MockFlutterPinelabsPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
-  Future<String?> doTransaction({required String request}) {
-    // TODO: implement doTransaction
-    throw UnimplementedError();
-  }
-
-  @override
   Future<String?> sendRequest({required String request}) {
-    // TODO: implement sendRequest
-    throw UnimplementedError();
+    return Future.value({'message': 'pinelab working'}.toString());
   }
 }
 
@@ -37,5 +30,21 @@ void main() {
     FlutterPinelabsPlatform.instance = fakePlatform;
 
     expect(await flutterPinelabsPlugin.getPlatformVersion(), '42');
+  });
+
+  group('sendRequest', () {
+    test('calls sendRequest on platform.', () async {
+      const flutterPinelabsPlugin = FlutterPinelabs(applicationId: 'abcdefgh');
+      final fakePlatform = MockFlutterPinelabsPlatform();
+      FlutterPinelabsPlatform.instance = fakePlatform;
+
+      final result =
+          await flutterPinelabsPlugin.sendRequest(request: 'request1');
+      PlatformInterface.verify(
+        FlutterPinelabsPlatform.instance,
+        fakePlatform.sendRequest(request: 'request'),
+      );
+      expect(result, {'message': 'pinelab working'}.toString());
+    });
   });
 }
