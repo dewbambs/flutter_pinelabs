@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_pinelabs/flutter_pinelabs.dart';
-import 'package:flutter_pinelabs/flutter_pinelabs_platform_interface.dart';
 import 'package:flutter_pinelabs/flutter_pinelabs_method_channel.dart';
+import 'package:flutter_pinelabs/flutter_pinelabs_platform_interface.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockFlutterPinelabsPlatform
@@ -15,6 +15,12 @@ class MockFlutterPinelabsPlatform
     // TODO: implement doTransaction
     throw UnimplementedError();
   }
+
+  @override
+  Future<String?> sendRequest({required String request}) {
+    // TODO: implement sendRequest
+    throw UnimplementedError();
+  }
 }
 
 void main() {
@@ -26,8 +32,8 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    FlutterPinelabs flutterPinelabsPlugin = FlutterPinelabs();
-    MockFlutterPinelabsPlatform fakePlatform = MockFlutterPinelabsPlatform();
+    const flutterPinelabsPlugin = FlutterPinelabs(applicationId: 'abcdefgh');
+    final fakePlatform = MockFlutterPinelabsPlatform();
     FlutterPinelabsPlatform.instance = fakePlatform;
 
     expect(await flutterPinelabsPlugin.getPlatformVersion(), '42');

@@ -23,11 +23,36 @@ abstract class FlutterPinelabsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Gets the platform version.
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> doTransaction({required String request}) {
+  /// send request for pinelabs device using [request]
+  /// [request] is a json string which can take any supported data
+  /// e.g.
+  /// ```
+  /// {
+  /// 	"Header": {
+  /// 		"ApplicationId": "abcdefgh",
+  /// 		"UserId": "user1234",
+  /// 		"MethodId": "1001",
+  /// 		"VersionNo": "1.0"
+  /// 	},
+  /// 	"Detail": {
+  /// 		"TransactionType": "4001",
+  /// 		"BillingRefNo": "TXN12345678",
+  /// 		"PaymentAmount": "9999000",
+  /// 		"MobileNumberForEChargeSlip": "9876543210",
+  /// 		"AdditionalInfo": {
+  /// 			"Split1": "99991",
+  /// 			"Split2": "99992",
+  /// 			"Split3": "99993"
+  /// 		}
+  /// 	}
+  /// }
+  /// ```
+  Future<String?> sendRequest({required String request}) {
     throw UnimplementedError('doTransaction() has not been implemented.');
   }
 }
