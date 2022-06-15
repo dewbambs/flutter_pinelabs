@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:flutter_pinelabs/flutter_pinelabs.dart';
+import 'package:flutter_pinelabs/flutter_pinelabs_module.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,34 +15,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _flutterPinelabsPlugin = const FlutterPinelabs();
+  final _flutterPinelabsPlugin = const FlutterPinelabs(
+    header: HeaderModel(
+      applicationId: 'your application id.',
+      methodId: '1001',
+      versionNo: '1.0',
+    ),
+  );
+  late TextEditingController _controller;
+  TransactionType _transactionType = TransactionType.cash;
+  String _responseMessage = '';
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _controller = TextEditingController();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion = await _flutterPinelabsPlugin.getPlatformVersion() ??
-          'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+  Future<void> _doTransaction(double amount) async {
+    /// do transaction for pinelabs device.
+    /// calls the pinelab device with the header provided in the constructor.
+    /// one can override the contructor using [overrideHeader] parameter.
+    final response = await _flutterPinelabsPlugin.doTransaction(
+      transactionType: _transactionType,
+      billingRefNo: '12345',
+      paymentAmount: amount,
+      mobileNumberForEChargeSlip: '1234567890',
+    );
 
+    /// provides ResponseModel in return which contains the response from the pinelabs device.
     setState(() {
-      _platformVersion = platformVersion;
+      _responseMessage = response?.responseMsg ?? '';
     });
   }
 
@@ -54,8 +62,42 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(hintText: 'Enter amount'),
+            ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<TransactionType>(
+              value: _transactionType,
+              items: TransactionType.values
+                  .map(
+                    (e) => DropdownMenuItem<TransactionType>(
+                      value: e,
+                      child: Text(e.name),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (e) {
+                if (e == null) return;
+
+                setState(() {
+                  _transactionType = e;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              child: const Text('Send request'),
+              onPressed: () async {
+                double amount = double.tryParse(_controller.text) ?? 0;
+                _doTransaction(amount);
+              },
+            ),
+            const SizedBox(height: 20),
+            Text('Running on: $_responseMessage\n'),
+          ],
         ),
       ),
     );

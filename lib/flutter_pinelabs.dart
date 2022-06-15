@@ -53,12 +53,14 @@ class FlutterPinelabs {
   ///
   /// [transactionType] is the transaction type from [TransactionType] enum.
   /// [billingRefNo] is the billing reference number.
-  /// [paymentAmount] is the payment amount.
+  /// [paymentAmount] is the payment amount only two decimal places are allowed.
+  /// if more than two decimal places are added then it will be rounded
+  /// off using toStringAsFixed(2).
   /// [mobileNumberForEChargeSlip] is the mobile number for eChargeSlip.
   Future<ResponseModel?> doTransaction({
     required TransactionType transactionType,
     String? billingRefNo,
-    double? paymentAmount,
+    required double paymentAmount,
     String? mobileNumberForEChargeSlip,
     HeaderModel? overrideHeader,
   }) async {
@@ -70,10 +72,15 @@ in override header.''',
       );
     }
 
+    // only double with two decimal places is allowed.
+    // and remove the dot in decimal.
+    final paymentAmountStr =
+        paymentAmount.toStringAsFixed(2).replaceAll('.', '');
+
     final detail = TransactionModel(
       transactionType: transactionType.code,
       billingRefNo: billingRefNo,
-      paymentAmount: paymentAmount.toString(),
+      paymentAmount: paymentAmountStr,
       mobileNumberForEChargeSlip: mobileNumberForEChargeSlip,
     );
     final header = overrideHeader ?? this.header;
