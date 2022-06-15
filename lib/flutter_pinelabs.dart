@@ -8,32 +8,10 @@ import 'package:flutter_pinelabs/models/transaction_model.dart';
 class FlutterPinelabs {
   /// An implementation of Pinelabs Platform Interface that uses method channels
   /// docs for pinelabs: https://developer.pinelabs.com/plutus-smart/docs
-  /// [applicationId] assigned by pinelabs to your application.
-  /// this application id is linked to your package id.
-  /// [userId] is the user id of the user which is logged-in.
-  /// [methodId] is the method id of the method which is called.
-  /// default to 1001 that is do transaction.
-  /// [versionNo] by default 1.0.
-  const FlutterPinelabs({
-    required this.applicationId,
-    this.userId,
-    this.methodId = '1001',
-    this.versionNo = '1.0',
-  });
+  const FlutterPinelabs({this.header});
 
-  /// [applicationId] assigned by pinelabs to your application.
-  /// this application id is linked to your package id.
-  final String applicationId;
-
-  /// [userId] is the user id of the user which is logged-in.
-  final String? userId;
-
-  /// [methodId] is the method id of the method which is called.
-  /// default to 1001 that is do transaction.
-  final String methodId;
-
-  /// [versionNo] by default 1.0.
-  final String versionNo;
+  /// [header] is the header of the request.
+  final HeaderModel? header;
 
   /// get the platform version
   Future<String?> getPlatformVersion() {
@@ -84,21 +62,23 @@ class FlutterPinelabs {
     String? mobileNumberForEChargeSlip,
     HeaderModel? overrideHeader,
   }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''
+Header is required, add header during initialization or pass header as parameter
+in override header.''',
+      );
+    }
+
     final detail = TransactionModel(
       transactionType: transactionType.code,
       billingRefNo: billingRefNo,
       paymentAmount: paymentAmount.toString(),
       mobileNumberForEChargeSlip: mobileNumberForEChargeSlip,
     );
-    final header = overrideHeader ??
-        HeaderModel(
-          applicationId: applicationId,
-          userId: userId,
-          methodId: methodId,
-          versionNo: versionNo,
-        );
+    final header = overrideHeader ?? this.header;
     final requestBody =
-        {'Header': header.toJson(), 'Detail': detail.toJson()}.toString();
+        {'Header': header?.toJson(), 'Detail': detail.toJson()}.toString();
 
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);

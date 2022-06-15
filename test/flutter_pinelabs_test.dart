@@ -25,7 +25,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    const flutterPinelabsPlugin = FlutterPinelabs(applicationId: 'abcdefgh');
+    const flutterPinelabsPlugin = FlutterPinelabs();
     final fakePlatform = MockFlutterPinelabsPlatform();
     FlutterPinelabsPlatform.instance = fakePlatform;
 
@@ -34,7 +34,7 @@ void main() {
 
   group('sendRequest', () {
     test('calls sendRequest on platform.', () async {
-      const flutterPinelabsPlugin = FlutterPinelabs(applicationId: 'abcdefgh');
+      const flutterPinelabsPlugin = FlutterPinelabs();
       final fakePlatform = MockFlutterPinelabsPlatform();
       FlutterPinelabsPlatform.instance = fakePlatform;
 
