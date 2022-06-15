@@ -17,8 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _flutterPinelabsPlugin =
-      const FlutterPinelabs(applicationId: 'abcdefgh');
+  final _flutterPinelabsPlugin = const FlutterPinelabs();
 
   @override
   void initState() {

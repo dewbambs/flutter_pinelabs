@@ -58,7 +58,7 @@ class FlutterPinelabs {
   Future<ResponseModel?> doTransaction({
     required TransactionType transactionType,
     String? billingRefNo,
-    int? paymentAmount,
+    double? paymentAmount,
     String? mobileNumberForEChargeSlip,
     HeaderModel? overrideHeader,
   }) async {
