@@ -24,11 +24,13 @@ class ResponseModel {
 
   /// get [ResponseModel] from [map].
   factory ResponseModel.fromMap(Map<String, dynamic> map) {
+    final code = map['Response']['ResponseCode'];
+
     return ResponseModel(
       header: HeaderModel.fromMap(map['Header']),
-      responseCode: int.tryParse(map['Response']['ResponseCode']) ?? 0,
+      responseCode: code is int ? code : int.tryParse(code) ?? 0,
       responseMsg: map['Response']['ResponseMsg'] ?? '',
-      rawResponse: map.toString(),
+      rawResponse: json.encode(map),
     );
   }
 

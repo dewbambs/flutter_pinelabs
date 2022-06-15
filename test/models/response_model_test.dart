@@ -74,8 +74,8 @@ void main() {
   test('from map return expected ResponseModel.', () {
     expect(
       ResponseModel.fromMap(json.decode(tJsonResponse)),
-      ResponseModel(
-        header: const HeaderModel(
+      const ResponseModel(
+        header: HeaderModel(
           applicationId: 'abcdefgh',
           userId: 'user1234',
           methodId: '1001',
@@ -83,7 +83,7 @@ void main() {
         ),
         responseCode: 0,
         responseMsg: 'Success',
-        rawResponse: json.decode(tJsonResponse).toString(),
+        rawResponse: tJsonResponse,
       ),
     );
   });
@@ -91,8 +91,8 @@ void main() {
   test('from json return expected ResponseModel.', () {
     expect(
       ResponseModel.fromJson(tJsonResponse),
-      ResponseModel(
-        header: const HeaderModel(
+      const ResponseModel(
+        header: HeaderModel(
           applicationId: 'abcdefgh',
           userId: 'user1234',
           methodId: '1001',
@@ -100,7 +100,7 @@ void main() {
         ),
         responseCode: 0,
         responseMsg: 'Success',
-        rawResponse: json.decode(tJsonResponse).toString(),
+        rawResponse: tJsonResponse,
       ),
     );
   });
@@ -146,9 +146,38 @@ void main() {
     );
   });
 
+  test('fromMap returns expected reponsemodel when response code is int.', () {
+    const map = {
+      'Header': {
+        'ApplicationId': 'something',
+        'MethodId': '1001',
+        'VersionNo': '1.0'
+      },
+      'Response': {'ResponseCode': 0, 'ResponseMsg': 'Success'},
+    };
+
+    expect(
+      ResponseModel.fromMap(map),
+      ResponseModel(
+        header: const HeaderModel(
+          applicationId: 'something',
+          methodId: '1001',
+          versionNo: '1.0',
+        ),
+        responseCode: 0,
+        responseMsg: 'Success',
+        rawResponse: json.encode(map),
+      ),
+    );
+  });
+
   test('toString return expected ResponseModel.', () {
     final tResponse = ResponseModel.fromJson(tJsonResponse);
-    expect(tResponse.toString(),
-        '''ResponseModel(header: ${tResponse.header.toString()}, responseCode: 0, responseMsg: Success, rawResponse: ${json.decode(tJsonResponse).toString()})''');
+    expect(
+      tResponse.toString(),
+      equalsIgnoringWhitespace(
+        '''ResponseModel(header: ${tResponse.header.toString()}, responseCode: 0, responseMsg: Success, rawResponse: ${json.encode(json.decode(tJsonResponse))})''',
+      ),
+    );
   });
 }

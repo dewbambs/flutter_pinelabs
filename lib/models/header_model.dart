@@ -22,7 +22,7 @@ class HeaderModel {
   factory HeaderModel.fromMap(Map<String, dynamic> map) {
     return HeaderModel(
       applicationId: map['ApplicationId'] ?? '',
-      userId: map['UserId'] ?? '',
+      userId: map['UserId'],
       methodId: map['MethodId'] ?? '',
       versionNo: map['VersionNo'] ?? '',
     );
