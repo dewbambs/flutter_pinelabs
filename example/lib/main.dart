@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _flutterPinelabsPlugin = const FlutterPinelabs(
     header: HeaderModel(
-      applicationId: '43640818b0cd432498aa166d5943f591',
+      applicationId: 'your pine lab id',
       methodId: '1001',
       versionNo: '1.0',
     ),
@@ -182,7 +182,7 @@ class _MyAppState extends State<MyApp> {
     );
     final response = await _flutterPinelabsPlugin.printData(
       overrideHeader: const HeaderModel(
-        applicationId: '3b3dabce3af34173a4c6d95e4f696e15',
+        applicationId: 'your pinelab app id',
         methodId: '1002',
         versionNo: '1.0',
       ),
