@@ -69,7 +69,6 @@ public class FlutterPinelabsPlugin implements FlutterPlugin, MethodCallHandler, 
   private void pinelabTransaction(String body){
     Message message = Message.obtain(null, MESSAGE_CODE);
     Bundle data = new Bundle();
-    System.out.println(body);
     data.putString(BILLING_REQUEST_TAG, body);
     message.setData(data);
     try  {

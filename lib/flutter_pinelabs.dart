@@ -1,5 +1,6 @@
 import 'package:flutter_pinelabs/flutter_pinelabs_platform_interface.dart';
 import 'package:flutter_pinelabs/models/header_model.dart';
+import 'package:flutter_pinelabs/models/print_model.dart';
 import 'package:flutter_pinelabs/models/response_model.dart';
 import 'package:flutter_pinelabs/models/transaction_model.dart';
 
@@ -83,9 +84,62 @@ in override header.''',
       paymentAmount: paymentAmountStr,
       mobileNumberForEChargeSlip: mobileNumberForEChargeSlip,
     );
-    final header = overrideHeader ?? this.header;
+    final header = overrideHeader?.copyWith(methodId: '1001') ??
+        this.header?.copyWith(methodId: '1001');
     final requestBody =
         {'Header': header?.toJson(), 'Detail': detail.toJson()}.toString();
+
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
+  }
+
+  /// Print paper-receipt on Plutus Smart Device using [request]
+  /// [request] is a json string which can take any supported data as per
+  /// pinelab documentation.
+  ///
+  /// e.g.
+  /// ```
+  /// {
+  ///    "Header": {
+  ///      "ApplicationId": "abcdefgh",
+  ///      "UserId": "user1234",
+  ///      "MethodId": "1002",
+  ///      "VersionNo": "1.0"
+  ///    },
+  ///    "Detail": {
+  ///      "PrintRefNo": "123456789",
+  ///      "SavePrintData": true,
+  ///      "Data": [
+  ///        {
+  ///          "PrintDataType": "0",
+  ///          "PrinterWidth": 24,
+  ///          "IsCenterAligned": true,
+  ///          "DataToPrint": "String Data",
+  ///          "ImagePath": "0",
+  ///          "ImageData": "0"
+  ///        },
+  ///      ],
+  ///    }
+  /// }```
+  Future<ResponseModel?> printData({
+    HeaderModel? overrideHeader,
+    required PrintModel printRequest,
+  }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''
+Header is required, add header during initialization or pass header as parameter
+in override header.''',
+      );
+    }
+
+    final header = overrideHeader?.copyWith(methodId: '1002') ??
+        this.header?.copyWith(methodId: '1002');
+    final requestBody = {
+      'Header': header?.toJson(),
+      'Detail': printRequest.toJson()
+    }.toString();
 
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);

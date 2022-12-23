@@ -1,7 +1,7 @@
+import 'package:flutter_pinelabs/flutter_pinelabs_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'flutter_pinelabs_method_channel.dart';
-
+/// dart abstraction that interacts with android.
 abstract class FlutterPinelabsPlatform extends PlatformInterface {
   /// Constructs a FlutterPinelabsPlatform.
   FlutterPinelabsPlatform() : super(token: _token);
