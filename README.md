@@ -79,6 +79,14 @@ sendRequest method is used to send json request to the device directly without a
   });
 ```
 
+### printData
+
+This method will be called when billing App wants to print paper-receipt on Plutus Smart Device. 
+
+This method takes 2 parameters:
+1. `overrideHeader`: this parameter is used to override the header provided when FlutterPinelabs was initialized. If it is null, header from initialisation is used.
+2. `printRequest`: Print request contains all the data that needs to be printed. (currently only printing text is tested)
+
 ### Additional Notes: 
 
 Failure Response from the device when timedout:
@@ -168,7 +176,7 @@ Success Reponse from the device:
 ### Future Scope: 
 
 Implement remaining methods such as:  
-[ ] Print Data  
+[x] Print Data  
 [ ] Settlement  
 [ ] Get Terminal Info  
 [ ] Connect Bluetooth  
