@@ -49,6 +49,40 @@ class FlutterPinelabs {
     return FlutterPinelabsPlatform.instance.sendRequest(request: request);
   }
 
+  /// get UPI status
+  Future<ResponseModel?> getUpiStatus({
+    String? billingRefNo,
+    required double paymentAmount,
+    HeaderModel? overrideHeader,
+  }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''
+Header is required, add header during initialization or pass header as parameter
+in override header.''',
+      );
+    }
+
+    // only double with two decimal places is allowed.
+    // and remove the dot in decimal.
+    final paymentAmountStr =
+        paymentAmount.toStringAsFixed(2).replaceAll('.', '');
+
+    final detail = TransactionModel(
+      transactionType: '5122',
+      billingRefNo: billingRefNo,
+      paymentAmount: paymentAmountStr,
+    );
+    final header = overrideHeader?.copyWith(methodId: '1001') ??
+        this.header?.copyWith(methodId: '1001');
+    final requestBody =
+        {'Header': header?.toJson(), 'Detail': detail.toJson()}.toString();
+
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
+  }
+
   /// do transaction for pinelabs device.
   /// calls pinelab device with MethodId 1001.
   ///
