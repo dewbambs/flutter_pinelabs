@@ -1,6 +1,6 @@
 name: flutter_pinelabs
 description: Flutter plugin to support pinelab device.
-version: 0.1.0+1
+version: 1.0.0+2
 repository: https://github.com/dewbambs/flutter_pinelabs.git
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
-  cidroy_analysis: ^0.0.3
+  cidroy_analysis: ^1.0.0
   flutter_test:
     sdk: flutter
 
