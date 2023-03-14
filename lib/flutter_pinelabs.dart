@@ -50,6 +50,8 @@ class FlutterPinelabs {
   }
 
   /// get UPI status
+  /// [paymentAmount] same as the upi payment amount.
+  /// [billingRefNo] same as the upi payment whose status needs to be checked.
   Future<ResponseModel?> getUpiStatus({
     required double paymentAmount,
     String? billingRefNo,

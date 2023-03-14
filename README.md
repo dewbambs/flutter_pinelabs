@@ -173,6 +173,10 @@ Success Reponse from the device:
 }
 ```
 
+## getUpiStatus
+
+This method can be used to fetch the status of a given upi transaction. Provide transactionId and amount of the UPI payment whose status needs to be checked.
+
 ### Future Scope: 
 
 Implement remaining methods such as:  
