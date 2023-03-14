@@ -13,9 +13,9 @@ class HeaderModel {
   /// [versionNo] for pinelabs.
   const HeaderModel({
     required this.applicationId,
-    this.userId,
     required this.methodId,
     required this.versionNo,
+    this.userId,
   });
 
   /// get [HeaderModel] from [map].

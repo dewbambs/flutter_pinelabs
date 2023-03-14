@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.0+2
 
 * added get upi status in case of upi payment timeout.
 

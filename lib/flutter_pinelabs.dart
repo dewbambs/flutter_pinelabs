@@ -51,8 +51,8 @@ class FlutterPinelabs {
 
   /// get UPI status
   Future<ResponseModel?> getUpiStatus({
-    String? billingRefNo,
     required double paymentAmount,
+    String? billingRefNo,
     HeaderModel? overrideHeader,
   }) async {
     if (overrideHeader == null && this.header == null) {
@@ -94,8 +94,8 @@ in override header.''',
   /// [mobileNumberForEChargeSlip] is the mobile number for eChargeSlip.
   Future<ResponseModel?> doTransaction({
     required TransactionType transactionType,
-    String? billingRefNo,
     required double paymentAmount,
+    String? billingRefNo,
     String? mobileNumberForEChargeSlip,
     HeaderModel? overrideHeader,
   }) async {
@@ -128,8 +128,8 @@ in override header.''',
     return response != null ? ResponseModel.fromJson(response) : null;
   }
 
-  /// Print paper-receipt on Plutus Smart Device using [request]
-  /// [request] is a json string which can take any supported data as per
+  /// Print paper-receipt on Plutus Smart Device using request
+  /// request is a json string which can take any supported data as per
   /// pinelab documentation.
   ///
   /// e.g.
@@ -157,8 +157,8 @@ in override header.''',
   ///    }
   /// }```
   Future<ResponseModel?> printData({
-    HeaderModel? overrideHeader,
     required PrintModel printRequest,
+    HeaderModel? overrideHeader,
   }) async {
     if (overrideHeader == null && this.header == null) {
       throw Exception(

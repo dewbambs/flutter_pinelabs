@@ -92,7 +92,8 @@ void main() {
           paymentAmount: 'm',
           mobileNumberForEChargeSlip: 'v',
         ).toJson(),
-        '{"TransactionType":"a","BillingRefNo":"u","PaymentAmount":"m","MobileNumberForEChargeSlip":"v"}',
+        '''
+{"TransactionType":"a","BillingRefNo":"u","PaymentAmount":"m","MobileNumberForEChargeSlip":"v"}''',
       );
     });
   });

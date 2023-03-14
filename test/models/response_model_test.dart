@@ -5,8 +5,7 @@ import 'package:flutter_pinelabs/models/response_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const tJsonResponse =
-      '''
+  const tJsonResponse = '''
 {
 	"Header": {
 		"ApplicationId": "abcdefgh",
@@ -176,7 +175,7 @@ void main() {
     expect(
       tResponse.toString(),
       equalsIgnoringWhitespace(
-        '''ResponseModel(header: ${tResponse.header.toString()}, responseCode: 0, responseMsg: Success, rawResponse: ${json.encode(json.decode(tJsonResponse))})''',
+        '''ResponseModel(header: ${tResponse.header}, responseCode: 0, responseMsg: Success, rawResponse: ${json.encode(json.decode(tJsonResponse))})''',
       ),
     );
   });

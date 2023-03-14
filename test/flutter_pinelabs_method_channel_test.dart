@@ -3,8 +3,8 @@ import 'package:flutter_pinelabs/flutter_pinelabs_method_channel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final MethodChannelFlutterPinelabs platform = MethodChannelFlutterPinelabs();
-  const MethodChannel channel = MethodChannel('flutter_pinelabs');
+  final platform = MethodChannelFlutterPinelabs();
+  const channel = MethodChannel('flutter_pinelabs');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 

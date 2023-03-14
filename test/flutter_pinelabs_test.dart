@@ -17,8 +17,7 @@ class MockFlutterPinelabsPlatform
 }
 
 void main() {
-  final FlutterPinelabsPlatform initialPlatform =
-      FlutterPinelabsPlatform.instance;
+  final initialPlatform = FlutterPinelabsPlatform.instance;
 
   test('$MethodChannelFlutterPinelabs is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelFlutterPinelabs>());
