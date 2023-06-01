@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_pinelabs/flutter_pinelabs_platform_interface.dart';
 import 'package:flutter_pinelabs/models/header_model.dart';
 import 'package:flutter_pinelabs/models/print_model.dart';
@@ -47,6 +49,38 @@ class FlutterPinelabs {
   /// ```
   Future<String?> sendRequest({required String request}) {
     return FlutterPinelabsPlatform.instance.sendRequest(request: request);
+  }
+
+  ///Establish a Bluetooth connection by making
+  ///a request to the master app (Home App)
+  /// [baseSerialNumber] same as the unique serial number at base.
+  Future<ResponseModel?> setBluetooth({
+    required String baseSerialNumber,
+    HeaderModel? overrideHeader,
+  }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''
+Header is required, add header during initialization or pass header as parameter
+in override header.''',
+      );
+    }
+
+    final detail = {
+      'BaseSerialNumber': baseSerialNumber,
+    };
+
+    final header = overrideHeader?.copyWith(methodId: '1005') ??
+        this.header?.copyWith(
+              methodId: '1005',
+              applicationId: '1001',
+            );
+    final requestBody =
+        json.encode({'Header': header?.toMap(), 'Detail': detail});
+    print('request body : $requestBody');
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
   }
 
   /// get UPI status
@@ -124,7 +158,7 @@ in override header.''',
         this.header?.copyWith(methodId: '1001');
     final requestBody =
         {'Header': header?.toJson(), 'Detail': detail.toJson()}.toString();
-
+    print('request body : $requestBody');
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);
     return response != null ? ResponseModel.fromJson(response) : null;

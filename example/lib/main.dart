@@ -17,25 +17,47 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _flutterPinelabsPlugin = const FlutterPinelabs(
     header: HeaderModel(
-      applicationId: 'your pine lab id',
+      applicationId: '',
       methodId: '1001',
       versionNo: '1.0',
+      userId: '1234',
     ),
   );
   late TextEditingController _controller;
+  late TextEditingController _setBluetoothController;
   TransactionType _transactionType = TransactionType.cash;
   String _responseMessage = '';
+  String _bluetoothResponseMessage = '';
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _setBluetoothController = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _setBluetoothController.dispose();
     super.dispose();
+  }
+
+  Future<void> _setBluetooth(String serialNumber) async {
+    /// do transaction for pinelabs device.
+    /// calls the pinelab device with the header provided in the constructor.
+    /// one can override the contructor using [overrideHeader] parameter.
+    print(serialNumber);
+    final response = await _flutterPinelabsPlugin.setBluetooth(
+      baseSerialNumber: serialNumber,
+    );
+
+    print(response.toString());
+
+    /// provides ResponseModel in return which contains the response from the pinelabs device.
+    setState(() {
+      _bluetoothResponseMessage = (response ?? '').toString();
+    });
   }
 
   Future<void> _doTransaction(double amount) async {
@@ -201,49 +223,115 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: 'Enter amount'),
-            ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<TransactionType>(
-              value: _transactionType,
-              items: TransactionType.values
-                  .map(
-                    (e) => DropdownMenuItem<TransactionType>(
-                      value: e,
-                      child: Text(e.name),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.black,
                     ),
-                  )
-                  .toList(),
-              onChanged: (e) {
-                if (e == null) return;
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      const Text('Transaction Related Operations'),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _controller,
+                        decoration:
+                            const InputDecoration(hintText: 'Enter amount'),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownButtonFormField<TransactionType>(
+                        value: _transactionType,
+                        items: TransactionType.values
+                            .map(
+                              (e) => DropdownMenuItem<TransactionType>(
+                                value: e,
+                                child: Text(e.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (e) {
+                          if (e == null) return;
 
-                setState(() {
-                  _transactionType = e;
-                });
-              },
+                          setState(() {
+                            _transactionType = e;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: const Text('Do transaction'),
+                            onPressed: () async {
+                              double amount =
+                                  double.tryParse(_controller.text) ?? 0;
+                              _responseMessage = '';
+                              await _doTransaction(amount);
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          ElevatedButton(
+                            child: const Text('Print Data'),
+                            onPressed: () async {
+                              await _printData();
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text('Running on: $_responseMessage\n'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.black,
+                    ),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      const Text('Bluetooth Related Operations'),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _setBluetoothController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter Base Serial Number',
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        child: const Text('Set Bluetooth'),
+                        onPressed: () async {
+                          _bluetoothResponseMessage = '';
+                          await _setBluetooth(_setBluetoothController.text);
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Bluetooth response: $_bluetoothResponseMessage\n',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text('Do transaction'),
-              onPressed: () async {
-                double amount = double.tryParse(_controller.text) ?? 0;
-                _doTransaction(amount);
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text('Print Data'),
-              onPressed: () async {
-                _printData();
-              },
-            ),
-            const SizedBox(height: 20),
-            Text('Running on: $_responseMessage\n'),
-          ],
+          ),
         ),
       ),
     );
