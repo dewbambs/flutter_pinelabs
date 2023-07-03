@@ -73,10 +73,11 @@ in override header.''',
     final header = overrideHeader?.copyWith(methodId: '1005') ??
         this.header?.copyWith(
               methodId: '1005',
-              applicationId: '1001',
             );
-    final requestBody =
-        json.encode({'Header': header?.toMap(), 'Detail': detail});
+    final requestBody = {
+      'Header': header?.toJson(),
+      'Detail': json.encode(detail)
+    }.toString();
     print('request body : $requestBody');
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);
