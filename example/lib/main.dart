@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:flutter_pinelabs/flutter_pinelabs_module.dart';
@@ -28,12 +29,14 @@ class _MyAppState extends State<MyApp> {
   TransactionType _transactionType = TransactionType.cash;
   String _responseMessage = '';
   String _bluetoothResponseMessage = '';
+  String _scanResponseMessage = '';
 
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     _controller = TextEditingController();
-    _setBluetoothController = TextEditingController();
+    _setBluetoothController = TextEditingController(text: '1990497297');
   }
 
   @override
@@ -43,20 +46,27 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  Future<void> _setBluetooth(String serialNumber) async {
-    /// do transaction for pinelabs device.
-    /// calls the pinelab device with the header provided in the constructor.
-    /// one can override the contructor using [overrideHeader] parameter.
-    print(serialNumber);
-    final response = await _flutterPinelabsPlugin.setBluetooth(
-      baseSerialNumber: serialNumber,
-    );
+  String _platformVersion = 'Unknown';
 
-    print(response.toString());
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    // We also handle the message potentially returning null.
+    try {
+      platformVersion = await _flutterPinelabsPlugin.getPlatformVersion() ??
+          'Unknown platform version';
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
 
-    /// provides ResponseModel in return which contains the response from the pinelabs device.
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
     setState(() {
-      _bluetoothResponseMessage = (response ?? '').toString();
+      _platformVersion = platformVersion;
     });
   }
 
@@ -74,6 +84,50 @@ class _MyAppState extends State<MyApp> {
     /// provides ResponseModel in return which contains the response from the pinelabs device.
     setState(() {
       _responseMessage = response?.responseMsg ?? '';
+    });
+  }
+
+  Future<void> _setBluetooth(String serialNumber) async {
+    /// do transaction for pinelabs device.
+    /// calls the pinelab device with the header provided in the constructor.
+    /// one can override the contructor using [overrideHeader] parameter.
+    final response = await _flutterPinelabsPlugin.setBluetooth(
+      baseSerialNumber: serialNumber,
+    );
+
+    /// provides ResponseModel in return which contains the response from the pinelabs device.
+    setState(() {
+      _bluetoothResponseMessage = (response?.rawResponse ?? '').toString();
+    });
+  }
+
+  /// Start Scan after successfull bluetooth connections
+  Future<void> _startScan(String serialNumber) async {
+    /// do transaction for pinelabs device.
+    /// calls the pinelab device with the header provided in the constructor.
+    /// one can override the contructor using [overrideHeader] parameter.
+    final response = await _flutterPinelabsPlugin.startScan(
+      baseSerialNumber: serialNumber,
+    );
+
+    /// provides ResponseModel in return which contains the response from the pinelabs device.
+    setState(() {
+      _scanResponseMessage = (response?.rawResponse ?? '').toString();
+    });
+  }
+
+  /// Stop Scan Method
+  Future<void> _stopScan(String serialNumber) async {
+    /// do transaction for pinelabs device.
+    /// calls the pinelab device with the header provided in the constructor.
+    /// one can override the contructor using [overrideHeader] parameter.
+    final response = await _flutterPinelabsPlugin.stopScan(
+      baseSerialNumber: serialNumber,
+    );
+
+    /// provides ResponseModel in return which contains the response from the pinelabs device.
+    setState(() {
+      _scanResponseMessage = (response?.rawResponse ?? '').toString();
     });
   }
 
@@ -228,6 +282,12 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
               children: [
+                Center(
+                  child: Text('Running on: $_platformVersion\n'),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -275,7 +335,8 @@ class _MyAppState extends State<MyApp> {
                             onPressed: () async {
                               double amount =
                                   double.tryParse(_controller.text) ?? 0;
-                              _responseMessage = '';
+                              _responseMessage = 'Processing Payment';
+                              setState(() {});
                               await _doTransaction(amount);
                             },
                           ),
@@ -289,7 +350,7 @@ class _MyAppState extends State<MyApp> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      Text('Running on: $_responseMessage\n'),
+                      Text('Transaction Response : $_responseMessage\n'),
                     ],
                   ),
                 ),
@@ -306,8 +367,17 @@ class _MyAppState extends State<MyApp> {
                   child: Column(
                     children: [
                       const Text('Bluetooth Related Operations'),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '(Configured for : 1990497297)',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       TextField(
+                        enabled: false,
                         controller: _setBluetoothController,
                         decoration: const InputDecoration(
                           hintText: 'Enter Base Serial Number',
@@ -318,13 +388,69 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                         child: const Text('Set Bluetooth'),
                         onPressed: () async {
-                          _bluetoothResponseMessage = '';
-                          await _setBluetooth(_setBluetoothController.text);
+                          _bluetoothResponseMessage = 'Pairing Bluetooth';
+                          setState(() {});
+                          // await _setBluetooth(_setBluetoothController.text);
+                          await _setBluetooth('1990497297');
                         },
                       ),
                       const SizedBox(height: 20),
                       Text(
                         'Bluetooth response: $_bluetoothResponseMessage\n',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.black,
+                    ),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text('Scan Related Operations'),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '(Configured for : 1990497297)',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            child: const Text('Start Scan'),
+                            onPressed: () async {
+                              _scanResponseMessage =
+                                  'Scan Started, awaiting response... !';
+                              setState(() {});
+                              await _startScan('1990497297');
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          ElevatedButton(
+                            child: const Text('Stop Scan'),
+                            onPressed: () async {
+                              _scanResponseMessage =
+                                  'Stop Scan Method Triggered, awaiting response... !';
+                              setState(() {});
+                              await _stopScan('1990497297');
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Scan response: $_scanResponseMessage\n',
                       ),
                     ],
                   ),
