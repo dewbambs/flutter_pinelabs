@@ -60,9 +60,7 @@ class FlutterPinelabs {
   }) async {
     if (overrideHeader == null && this.header == null) {
       throw Exception(
-        '''
-Header is required, add header during initialization or pass header as parameter
-in override header.''',
+        '''Header is required, add header during initialization or pass header as parameter in override header.''',
       );
     }
 
@@ -76,6 +74,67 @@ in override header.''',
             );
     final requestBody =
         {'Header': header?.toJson(), 'Detail': json.encode(detail)}.toString();
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
+  }
+
+  /// Start Scan after successfull bluetooth connection
+  /// a request to the master app (Home App)
+  /// [baseSerialNumber] same as the unique serial number at base.
+  Future<ResponseModel?> startScan({
+    required String baseSerialNumber,
+    HeaderModel? overrideHeader,
+  }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''Header is required, add header during initialization or pass header as parameter in override header.''',
+      );
+    }
+
+    final detail = {
+      'BaseSerialNumber': baseSerialNumber,
+    };
+
+    final header = overrideHeader?.copyWith(methodId: '1007') ??
+        this.header?.copyWith(
+              methodId: '1007',
+            );
+    final requestBody = {
+      'Header': header?.toJson(),
+      'Detail': json.encode(detail),
+    }.toString();
+
+    final response = await FlutterPinelabsPlatform.instance
+        .sendRequest(request: requestBody);
+    return response != null ? ResponseModel.fromJson(response) : null;
+  }
+
+  /// Stop Scan after Scann has been Started
+  /// a request to the master app (Home App)
+  /// [baseSerialNumber] same as the unique serial number at base.
+  Future<ResponseModel?> stopScan({
+    required String baseSerialNumber,
+    HeaderModel? overrideHeader,
+  }) async {
+    if (overrideHeader == null && this.header == null) {
+      throw Exception(
+        '''Header is required, add header during initialization or pass header as parameter in override header.''',
+      );
+    }
+
+    final detail = {
+      'BaseSerialNumber': baseSerialNumber,
+    };
+
+    final header = overrideHeader?.copyWith(methodId: '1012') ??
+        this.header?.copyWith(
+              methodId: '1012',
+            );
+    final requestBody = {
+      'Header': header?.toJson(),
+      'Detail': json.encode(detail),
+    }.toString();
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);
     return response != null ? ResponseModel.fromJson(response) : null;

@@ -20,6 +20,7 @@ class ResponseModel {
     required this.responseCode,
     required this.responseMsg,
     this.rawResponse = '',
+    this.scannedData = '',
   });
 
   /// get [ResponseModel] from [map].
@@ -30,6 +31,7 @@ class ResponseModel {
       header: HeaderModel.fromMap(map['Header']),
       responseCode: code is int ? code : int.tryParse(code) ?? 0,
       responseMsg: map['Response']['ResponseMsg'] ?? '',
+      scannedData: map['Detail']?['ScannedData'] ?? '',
       rawResponse: json.encode(map),
     );
   }
@@ -51,6 +53,9 @@ class ResponseModel {
   /// [rawResponse] is the string response received from pinelabs.
   final String rawResponse;
 
+  /// [scannedData] is the String response received from the scanner methods.
+  final String scannedData;
+
   /// get map from [ResponseModel].
   Map<String, dynamic> toMap() {
     return json.decode(rawResponse);
@@ -65,18 +70,20 @@ class ResponseModel {
     int? responseCode,
     String? responseMsg,
     String? rawResponse,
+    String? scannedData,
   }) {
     return ResponseModel(
       header: header ?? this.header,
       responseCode: responseCode ?? this.responseCode,
       responseMsg: responseMsg ?? this.responseMsg,
       rawResponse: rawResponse ?? this.rawResponse,
+      scannedData: scannedData ?? this.scannedData,
     );
   }
 
   @override
   String toString() {
-    return '''ResponseModel(header: $header, responseCode: $responseCode, responseMsg: $responseMsg, rawResponse: $rawResponse)''';
+    return '''ResponseModel(header: $header, responseCode: $responseCode, responseMsg: $responseMsg, rawResponse: $rawResponse, scannedData: $scannedData)''';
   }
 
   @override
@@ -87,6 +94,7 @@ class ResponseModel {
         other.header == header &&
         other.responseCode == responseCode &&
         other.responseMsg == responseMsg &&
+        other.scannedData == scannedData &&
         // remove all whitespace from rawResponse
         other.rawResponse.replaceAll(RegExp(r'\s+'), '') ==
             rawResponse.replaceAll(RegExp(r'\s+'), '');
@@ -97,6 +105,7 @@ class ResponseModel {
     return header.hashCode ^
         responseCode.hashCode ^
         responseMsg.hashCode ^
+        scannedData.hashCode ^
         rawResponse.hashCode;
   }
 }
