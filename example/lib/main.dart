@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     _controller = TextEditingController();
-    _setBluetoothController = TextEditingController(text: '1990497297');
+    _setBluetoothController = TextEditingController(text: '1991053608');
   }
 
   @override
@@ -369,7 +369,7 @@ class _MyAppState extends State<MyApp> {
                       const Text('Bluetooth Related Operations'),
                       const SizedBox(height: 10),
                       const Text(
-                        '(Configured for : 1990497297)',
+                        '(Configured for : 1991053608)',
                         style: TextStyle(
                           fontSize: 10,
                           fontStyle: FontStyle.italic,
@@ -388,10 +388,12 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                         child: const Text('Set Bluetooth'),
                         onPressed: () async {
-                          _bluetoothResponseMessage = 'Pairing Bluetooth';
-                          setState(() {});
-                          // await _setBluetooth(_setBluetoothController.text);
-                          await _setBluetooth('1990497297');
+                          if (_setBluetoothController.text.isNotEmpty) {
+                            _bluetoothResponseMessage = 'Pairing Bluetooth';
+                            setState(() {});
+                            await _setBluetooth(_setBluetoothController.text);
+                          }
+                          // await _setBluetooth('1990497297');
                         },
                       ),
                       const SizedBox(height: 20),
@@ -417,7 +419,7 @@ class _MyAppState extends State<MyApp> {
                       const Text('Scan Related Operations'),
                       const SizedBox(height: 10),
                       const Text(
-                        '(Configured for : 1990497297)',
+                        '(Configured for : 1991053608)',
                         style: TextStyle(
                           fontSize: 10,
                           fontStyle: FontStyle.italic,
@@ -433,7 +435,7 @@ class _MyAppState extends State<MyApp> {
                               _scanResponseMessage =
                                   'Scan Started, awaiting response... !';
                               setState(() {});
-                              await _startScan('1990497297');
+                              await _startScan('1991053608');
                             },
                           ),
                           const SizedBox(width: 20),
@@ -443,7 +445,7 @@ class _MyAppState extends State<MyApp> {
                               _scanResponseMessage =
                                   'Stop Scan Method Triggered, awaiting response... !';
                               setState(() {});
-                              await _stopScan('1990497297');
+                              await _stopScan('1991053608');
                             },
                           ),
                         ],
