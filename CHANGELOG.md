@@ -1,3 +1,7 @@
+## 1.1.0+3
+
+* added scan product feature using peripherral app.
+
 ## 1.0.0+2
 
 * added get upi status in case of upi payment timeout.

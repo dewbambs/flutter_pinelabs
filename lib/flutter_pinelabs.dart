@@ -74,11 +74,8 @@ in override header.''',
         this.header?.copyWith(
               methodId: '1005',
             );
-    final requestBody = {
-      'Header': header?.toJson(),
-      'Detail': json.encode(detail)
-    }.toString();
-    print('request body : $requestBody');
+    final requestBody =
+        {'Header': header?.toJson(), 'Detail': json.encode(detail)}.toString();
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);
     return response != null ? ResponseModel.fromJson(response) : null;
@@ -159,7 +156,6 @@ in override header.''',
         this.header?.copyWith(methodId: '1001');
     final requestBody =
         {'Header': header?.toJson(), 'Detail': detail.toJson()}.toString();
-    print('request body : $requestBody');
     final response = await FlutterPinelabsPlatform.instance
         .sendRequest(request: requestBody);
     return response != null ? ResponseModel.fromJson(response) : null;

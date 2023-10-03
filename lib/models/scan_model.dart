@@ -22,8 +22,8 @@ class ScanModel {
     required this.header,
     required this.responseCode,
     required this.responseMsg,
-    this.rawResponse = '',
     required this.scannedProducts,
+    this.rawResponse = '',
   });
 
   /// get [ScanModel] from [map].
